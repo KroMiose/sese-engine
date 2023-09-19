@@ -1,0 +1,4 @@
+savedata
+**/__pycache__/
+**/*.pyc
+**/*.pyo

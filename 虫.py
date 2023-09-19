@@ -5,7 +5,7 @@ from functools import lru_cache
 from urllib.parse import urlparse
 from typing import Optional, Tuple, Iterable, Dict, List
 
-from reppy.robots import Robots, AllowNone
+# from reppy.robots import Robots, AllowNone
 import requests
 
 from 配置 import 爬虫的名字, 爬虫冷却时间
@@ -18,12 +18,12 @@ class LoliError(Exception):
     ...
 
 
-@lru_cache(maxsize=512)
-def 萝卜(url):
-    rp = Robots.fetch(url+'/robots.txt', timeout=5, headers={'user-agent': 爬虫的名字})
-    if isinstance(rp, AllowNone):
-        rp = Robots.fetch(url+'/robots.txt', timeout=5)
-    return rp
+# @lru_cache(maxsize=512)
+# def 萝卜(url):
+#     rp = Robots.fetch(url+'/robots.txt', timeout=5, headers={'user-agent': 爬虫的名字})
+#     if isinstance(rp, AllowNone):
+#         rp = Robots.fetch(url+'/robots.txt', timeout=5)
+#     return rp
 
 
 def _解析文本(resp, 大小限制=None) -> str:
@@ -68,9 +68,10 @@ def 真爬(url, 乖=True, timeout=5, 大小限制=None) -> Tuple[str, str, Dict[
         if random.random() < 0.01:
             限流计时 = {k: v for k, v in 限流计时.items() if now - v < 爬虫冷却时间 + 1}
     if 乖:
-        rp = 萝卜(f'{q.scheme}://{q.netloc}')
-        if not rp.allowed(url, 爬虫的名字):
-            raise LoliError('被禁了，不行！')
+        pass # 不管，反正就是可以
+        # rp = 萝卜(f'{q.scheme}://{q.netloc}')
+        # if not rp.allowed(url, 爬虫的名字):
+        #     raise LoliError('被禁了，不行！')
     resp = requests.get(url, timeout=timeout, headers={'user-agent': 爬虫的名字}, stream=True)
     if resp.status_code == 404:
         raise LoliError('没有！没有！')
