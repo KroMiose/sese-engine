@@ -8,7 +8,7 @@ from typing import Optional, Tuple, Iterable, Dict, List
 # from reppy.robots import Robots, AllowNone
 import requests
 
-from 配置 import 爬虫的名字, 爬虫冷却时间
+from 配置 import 爬虫的名字, 爬虫冷却时间, 上不上代理, 爬虫的代理服务器
 
 logging.getLogger('urllib3.connection').setLevel(logging.CRITICAL)  # urllib3太吵了
 logging.getLogger('urllib3.connectionpool').setLevel(logging.CRITICAL)
@@ -72,11 +72,11 @@ def 真爬(url, 乖=True, timeout=5, 大小限制=None) -> Tuple[str, str, Dict[
         # rp = 萝卜(f'{q.scheme}://{q.netloc}')
         # if not rp.allowed(url, 爬虫的名字):
         #     raise LoliError('被禁了，不行！')
-    resp = requests.get(url, timeout=timeout, headers={'user-agent': 爬虫的名字}, stream=True)
+    resp = requests.get(url, timeout=timeout, headers={'user-agent': 爬虫的名字}, stream=True, proxies=爬虫的代理服务器 if 上不上代理 else None)
     if resp.status_code == 404:
         raise LoliError('没有！没有！')
     if 400 <= resp.status_code < 500:
-        resp = requests.get(url, timeout=timeout/2, stream=True)
+        resp = requests.get(url, timeout=timeout/2, stream=True, proxies=爬虫的代理服务器 if 上不上代理 else None)
     resp.raise_for_status()
     if 'text/html' not in resp.headers.get('Content-Type', ''):
         raise LoliError(f'类型{resp.headers.get("Content-Type")}不行！')
